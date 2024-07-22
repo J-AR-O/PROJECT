@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplicación de Almacenamiento de Datos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            text-align: center;
+        }
+        input[type="text"] {
+            width: 70%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            padding: 10px;
+            background: #f4f4f4;
+            margin: 5px 0;
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Aplicación de Almacenamiento de Datos</h1>
+        <input type="text" id="dataInput" placeholder="Ingresa un dato...">
+        <button onclick="addData()">Agregar</button>
+        <ul id="dataList"></ul>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', loadData);
+
+        function addData() {
+            let dataInput = document.getElementById('dataInput').value;
+            if (dataInput === '') return;
+
+            let dataList = JSON.parse(localStorage.getItem('dataList')) || [];
+            dataList.push(dataInput);
+            localStorage.setItem('dataList', JSON.stringify(dataList));
+            document.getElementById('dataInput').value = '';
+
+            loadData();
+        }
+
+        function loadData() {
+            let dataList = JSON.parse(localStorage.getItem('dataList')) || [];
+            let ul = document.getElementById('dataList');
+            ul.innerHTML = '';
+
+            dataList.forEach((data, index) => {
+                let li = document.createElement('li');
+                li.innerHTML = `
+                    ${data} <button onclick="deleteData(${index})">Eliminar</button>
+                `;
+                ul.appendChild(li);
+            });
+        }
+
+        function deleteData(index) {
+            let dataList = JSON.parse(localStorage.getItem('dataList'));
+            dataList.splice(index, 1);
+            localStorage.setItem('dataList', JSON.stringify(dataList));
+
+            loadData();
+        }
+    </script>
+</body>
+</html>
